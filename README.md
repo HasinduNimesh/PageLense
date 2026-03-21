@@ -14,20 +14,20 @@ npm install
 
 # 2. Set your environment variable
 cp .env.example .env.local
-# Add your Gemini API key to .env.local
+# Add your Groq API key to .env.local
 
 # 3. Run locally
 npm run dev
 # Open http://localhost:3000
 ```
 
-### Get a free Gemini API key
-1. Go to https://aistudio.google.com/app/apikey
+### Get a free Groq API key
+1. Go to https://console.groq.com/keys
 2. Click "Create API Key" (free, no credit card)
 3. Add to `.env.local`:
 
 ```env
-GEMINI_API_KEY=your_key_here
+GROQ_API_KEY=your_key_here
 ```
 
 ---
@@ -47,7 +47,7 @@ User inputs URL
       │         │
       │         └─▶ Returns: ScrapedMetrics (wordCount, headings, CTAs, links, images, meta)
       │
-      └─▶ lib/ai.ts  ──────── Gemini 1.5 Flash analyzes metrics + page text
+      └─▶ lib/ai.ts  ──────── Llama 3.3 70B via Groq analyzes metrics + page text
                 │
                 └─▶ Returns: AIAnalysis (insights, recommendations, summary)
                              + PromptLog (system prompt, user prompt, raw response)
@@ -81,7 +81,7 @@ This grounds the AI's "good/needs work/poor" ratings in real standards, not gues
 We use `temperature: 0.3` to minimize hallucination. Web audits need accuracy, not creativity.
 
 ### 4. Forced JSON output mode
-We use Gemini's `responseMimeType: "application/json"` to force structured output, with a fallback JSON parser in case the model adds markdown fences.
+We use Groq's `response_format: { type: "json_object" }` to force structured output, with a fallback JSON parser in case the model adds markdown fences.
 
 ### 5. Prompt logs included in API response
 Every response includes the full prompt log (system prompt, user prompt, raw model output) — visible in the UI under "Prompt log / reasoning trace". This satisfies the assessment requirement and makes the AI layer transparent.
@@ -92,7 +92,7 @@ Every response includes the full prompt log (system prompt, user prompt, raw mod
 
 | Decision | Trade-off |
 |---|---|
-| Gemini 1.5 Flash (free) | Lower quality than GPT-4o or Claude Opus, but sufficient for structured analysis |
+| Llama 3.3 70B (Groq) | High speed and excellent metric grounding via free tier, but subject to rate limits |
 | cheerio (static scraper) | Fast and simple, but can't scrape JS-rendered content (use Puppeteer for SPAs) |
 | Single page only | Intentional scope limit per assessment. Multi-page would need a queue system |
 | Server-side scraping via API route | Avoids CORS issues. Vercel 30s timeout is a constraint for slow pages |
@@ -148,6 +148,6 @@ These are also visible in the UI — click "Prompt log / reasoning trace" after 
 - **Framework:** Next.js 16 (App Router)
 - **Language:** TypeScript
 - **Scraping:** cheerio + native fetch
-- **AI:** Google Gemini 1.5 Flash API
+- **AI:** Llama 3.3 70B Versatile (via Groq API)
 - **Deployment:** Vercel (free tier)
 - **Styling:** Tailwind CSS
