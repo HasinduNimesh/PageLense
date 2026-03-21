@@ -1,6 +1,6 @@
 "use client"
 
-import { ArrowRight, Loader2, Search, AlertCircle, Moon, Sun } from "lucide-react"
+import { ArrowRight, ArrowLeft, Loader2, Search, AlertCircle, Moon, Sun } from "lucide-react"
 import { useState, Suspense, lazy, useEffect, useRef } from "react"
 import Image from "next/image"
 import { AuditReport } from "./audit-report"
@@ -156,14 +156,6 @@ export function CTASection() {
             <div className="relative z-10 px-6 w-full max-w-4xl mx-auto text-center flex flex-col items-center">
 
               <div className={`transition-all duration-700 ease-in-out flex flex-col items-center ${isStarted ? 'opacity-0 -translate-y-8 pointer-events-none absolute' : 'opacity-100 translate-y-0 relative'}`}>
-                <div className="mb-8 inline-flex items-center gap-2 rounded-full border border-primary/10 bg-primary/5 px-4 py-1.5 text-sm font-medium text-primary backdrop-blur-sm">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-                  </span>
-                  AI Website Auditor
-                </div>
-
                 {/* Headline */}
                 <h2 className="font-heading text-5xl md:text-7xl lg:text-7xl font-bold tracking-tight text-foreground mb-8 leading-[1.05]">
                   Evaluate performance, <br />
@@ -190,6 +182,18 @@ export function CTASection() {
                 ${isStarted && !isAnalyzing ? 'opacity-100 translate-y-0 relative delay-300' :
                   isAnalyzing ? 'opacity-100 -translate-y-8 relative' :
                     'opacity-0 translate-y-8 pointer-events-none absolute'}`}>
+
+                {/* Back button */}
+                {!isAnalyzing && (
+                  <button
+                    onClick={() => setIsStarted(false)}
+                    className="mb-6 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <ArrowLeft className="w-4 h-4" />
+                    Back
+                  </button>
+                )}
+
                 <form onSubmit={handleAnalyze} className="relative group rounded-full w-full bg-background/80 backdrop-blur-md overflow-hidden before:absolute before:w-16 before:h-16 before:content[''] before:right-0 before:bg-primary/30 before:rounded-full before:blur-xl before:[box-shadow:-60px_20px_10px_10px_rgba(236,78,2,0.15)] dark:before:[box-shadow:-60px_20px_10px_10px_rgba(236,78,2,0.15)] border border-border shadow-xl z-20">
                   <div className="flex items-center w-full px-2 py-2">
                     <div className="pl-4 pr-2 text-muted-foreground">
