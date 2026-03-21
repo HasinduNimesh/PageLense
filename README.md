@@ -8,8 +8,8 @@ An AI-powered website audit tool built for EIGHT25MEDIA. Paste a URL, get real f
 
 ```bash
 # 1. Clone and install
-git clone https://github.com/yourusername/web-audit-tool
-cd web-audit-tool
+git clone https://github.com/HasinduNimesh/PageLense
+cd wpageLense
 npm install
 
 # 2. Set your environment variable
