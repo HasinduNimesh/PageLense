@@ -2,10 +2,12 @@
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center p-4">
-      <DemoOne />
+    <div className="flex min-h-screen flex-col">
+      <main className="flex flex-1 flex-col items-center justify-center p-4">
+        <DemoOne />
+      </main>
 
-      <footer className="fixed bottom-0 left-0 right-0 py-4 text-center text-sm text-muted-foreground">
+      <footer className="w-full py-4 text-center text-sm text-muted-foreground">
         Developed by{" "}
         <a
           href="https://hasindu.me"
@@ -16,6 +18,6 @@ export default function Home() {
           Hasindu Nimesh
         </a>
       </footer>
-    </main>
+    </div>
   );
 }
