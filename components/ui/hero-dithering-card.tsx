@@ -27,6 +27,7 @@ export function CTASection() {
   const { theme, toggleTheme, mounted } = useTheme()
   const [isHovered, setIsHovered] = useState(false)
   const [isStarted, setIsStarted] = useState(false)
+  const [isVerifying, setIsVerifying] = useState(false)
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [showReport, setShowReport] = useState(false)
   const [url, setUrl] = useState("")
@@ -48,8 +49,40 @@ export function CTASection() {
     e.preventDefault()
     if (!url) return
 
+    let targetUrl = url.trim()
+    const urlPattern = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,})([\/\w \.-]*)*\/?$/i;
+    
+    if (!urlPattern.test(targetUrl) && !targetUrl.includes("localhost")) {
+      setError("Please enter a valid website URL (e.g., example.com)")
+      return;
+    }
+
+    if (!targetUrl.startsWith("http://") && !targetUrl.startsWith("https://")) {
+      targetUrl = "https://" + targetUrl
+    }
+
     setError(null)
     setAuditResult(null)
+    setIsVerifying(true)
+
+    try {
+      const verifyRes = await fetch("/api/verify", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url: targetUrl }),
+      })
+      const verifyData = await verifyRes.json()
+      
+      if (!verifyRes.ok) {
+        throw new Error(verifyData.error || "Failed to reach website")
+      }
+    } catch (err) {
+      setIsVerifying(false)
+      setError(err instanceof Error ? err.message : "Website does not exist or is unreachable")
+      return;
+    }
+
+    setIsVerifying(false)
     setIsAnalyzing(true)
     setCurrentStep(0)
 
@@ -62,12 +95,6 @@ export function CTASection() {
     }, 800)
 
     try {
-      // Ensure URL has protocol
-      let targetUrl = url.trim()
-      if (!targetUrl.startsWith("http://") && !targetUrl.startsWith("https://")) {
-        targetUrl = "https://" + targetUrl
-      }
-
       const response = await fetch("/api/audit", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -184,7 +211,7 @@ export function CTASection() {
                     'opacity-0 translate-y-8 pointer-events-none absolute'}`}>
 
                 {/* Back button */}
-                {!isAnalyzing && (
+                {!isAnalyzing && !isVerifying && (
                   <button
                     onClick={() => setIsStarted(false)}
                     className="mb-6 flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
@@ -206,17 +233,19 @@ export function CTASection() {
                       className="peer relative flex-1 text-foreground bg-transparent ring-0 outline-none text-base placeholder-muted-foreground block w-full py-3"
                       value={url}
                       onChange={(e) => setUrl(e.target.value)}
-                      disabled={isAnalyzing}
+                      disabled={isAnalyzing || isVerifying}
                     />
                     <button
                       type="submit"
-                      disabled={isAnalyzing}
+                      disabled={isAnalyzing || isVerifying}
                       className="ml-2 mr-1 shrink-0 bg-primary text-primary-foreground font-semibold px-6 py-3 rounded-full hover:bg-primary/90 transition-all hover:scale-105 active:scale-95 disabled:pointer-events-none disabled:opacity-80 flex items-center gap-2 relative z-30"
                     >
-                      {isAnalyzing ? (
+                      {isAnalyzing || isVerifying ? (
                         <>
                           <Loader2 className="w-4 h-4 animate-spin" />
-                          <span className="hidden sm:inline">Scanning...</span>
+                          <span className="hidden sm:inline">
+                            {isVerifying ? "Verifying..." : "Scanning..."}
+                          </span>
                         </>
                       ) : (
                         <>
@@ -287,19 +316,19 @@ export function CTASection() {
 
           {/* Collapsed Header when showing report */}
           {showReport && (
-            <div className="relative z-10 w-full flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="h-10 w-10 flex items-center justify-center rounded-full bg-primary/10 border border-primary/20 text-primary">
-                  <Search className="w-5 h-5" />
+            <div className="relative z-10 w-full flex items-center justify-between gap-2">
+              <div className="flex items-center gap-3 min-w-0">
+                <div className="h-10 w-10 shrink-0 flex items-center justify-center rounded-full bg-primary/10 border border-primary/20 text-primary">
+                  <Search className="w-5 h-5 shrink-0" />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <div className="text-xs text-muted-foreground font-medium uppercase tracking-wider">Target URL</div>
-                  <div className="font-semibold truncate max-w-75 md:max-w-125">{auditResult?.metrics.url}</div>
+                  <div className="font-semibold truncate max-w-[150px] sm:max-w-xs md:max-w-md">{auditResult?.metrics.url}</div>
                 </div>
               </div>
               <button
                 onClick={handleNewAudit}
-                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors border border-border rounded-full px-4 py-2 hover:bg-muted"
+                className="shrink-0 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors border border-border rounded-full px-4 py-2 hover:bg-muted"
               >
                 New Audit
               </button>
