@@ -1,7 +1,7 @@
 import { ScrapedMetrics, AIAnalysis, PromptLog } from "./types";
 
 const GROQ_URL = "https://api.groq.com/openai/v1/chat/completions";
-const GROQ_MODEL = "llama-3.3-70b-versatile";
+const GROQ_MODEL = "openai/gpt-oss-120b";
 
 // Helper for timestamped logging
 function log(step: string, message: string) {
