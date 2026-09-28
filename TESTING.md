@@ -15,7 +15,7 @@ This document presents the formal validation results for the PageLense website a
 **Overall Result: PASS**
 
 - **Core Metrics Accuracy:** 100% (4/4 metric categories validated)
-- **AI Reasoning Quality:** Production-grade (Llama 3.3 70B selected after comparative analysis)
+- **AI Reasoning Quality:** Production-grade (openai/gpt-oss-120b via Groq API)
 - **Edge Cases:** 3 documented trade-offs with clear engineering rationale
 
 The system is validated for production deployment and meets the technical requirements for the EIGHT25MEDIA AI-Native Software Engineer assessment.
@@ -135,14 +135,9 @@ Two LLM backends were evaluated for production deployment:
 | Latency (avg) | ~3.2s | ~2.8s |
 | Cost | Free tier | Free tier (Groq) |
 
-### Selection Rationale
+### Current Configuration
 
-**Winner: Llama 3.3 70B Versatile (via Groq API)**
-
-1. **Richer Output:** 51% longer responses with more actionable detail.
-2. **Complete Metric Grounding:** Every insight explicitly referenced numbers from the input metrics (e.g., "0 H1 tags found", "527 words is below the 800-word threshold").
-3. **Lower Latency:** Groq's inference infrastructure delivered sub-3s responses consistently.
-4. **Structured Output Compliance:** Native JSON mode (`response_format: { type: "json_object" }`) eliminated parsing failures.
+**Active model in the application:** `openai/gpt-oss-120b` (via Groq API)
 
 ### AI Quality Validation
 

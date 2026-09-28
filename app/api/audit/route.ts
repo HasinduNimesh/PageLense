@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
 
     // Step 2: Analyze with AI
     console.log("\n" + "─".repeat(40));
-    log("AI", "🤖 Sending metrics to Groq (Llama 3.3 70B)...");
+    log("AI", "🤖 Sending metrics to Groq (openai/gpt-oss-120b)...");
     const aiStart = Date.now();
 
     const { analysis, log: promptLog } = await analyzeWithAI(metrics);

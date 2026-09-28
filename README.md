@@ -47,7 +47,7 @@ User inputs URL
       │         │
       │         └─▶ Returns: ScrapedMetrics (wordCount, headings, CTAs, links, images, meta)
       │
-      └─▶ lib/ai.ts  ──────── Llama 3.3 70B via Groq analyzes metrics + page text
+      └─▶ lib/ai.ts  ──────── openai/gpt-oss-120b via Groq analyzes metrics + page text
                 │
                 └─▶ Returns: AIAnalysis (insights, recommendations, summary)
                              + PromptLog (system prompt, user prompt, raw response)
@@ -92,7 +92,7 @@ Every response includes the full prompt log (system prompt, user prompt, raw mod
 
 | Decision | Trade-off |
 |---|---|
-| Llama 3.3 70B (Groq) | High speed and excellent metric grounding via free tier, but subject to rate limits |
+| openai/gpt-oss-120b (Groq) | High speed and excellent metric grounding via free tier, but subject to rate limits |
 | cheerio (static scraper) | Fast and simple, but can't scrape JS-rendered content (use Puppeteer for SPAs) |
 | Single page only | Intentional scope limit per assessment. Multi-page would need a queue system |
 | Server-side scraping via API route | Avoids CORS issues. Vercel 30s timeout is a constraint for slow pages |
@@ -148,6 +148,6 @@ These are also visible in the UI — click "Prompt log / reasoning trace" after 
 - **Framework:** Next.js 16 (App Router)
 - **Language:** TypeScript
 - **Scraping:** cheerio + native fetch
-- **AI:** Llama 3.3 70B Versatile (via Groq API)
+- **AI:** openai/gpt-oss-120b (via Groq API)
 - **Deployment:** Vercel (free tier)
 - **Styling:** Tailwind CSS

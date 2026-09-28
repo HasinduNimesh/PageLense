@@ -19,7 +19,7 @@ const AUDIT_STEPS = [
   { id: "extract", label: "Extracting metrics", activeLabel: "Extracting metrics...", detail: "Words, headings, CTAs, links, images" },
   { id: "meta", label: "Reading meta tags", activeLabel: "Reading meta...", detail: "Title, description, OG tags" },
   { id: "prepare", label: "Building AI prompt", activeLabel: "Preparing analysis...", detail: "Formatting data for AI" },
-  { id: "ai", label: "AI analyzing content", activeLabel: "AI analyzing...", detail: "Groq API → Llama 3.3 70B" },
+  { id: "ai", label: "AI analyzing content", activeLabel: "AI analyzing...", detail: "Groq API → openai/gpt-oss-120b" },
   { id: "complete", label: "Generating report", activeLabel: "Building report...", detail: "Structuring insights & recommendations" },
 ]
 
